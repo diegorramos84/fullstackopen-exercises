@@ -1,0 +1,17 @@
+title New note
+note over browser:
+User click the save button sending a HTTP POST to the server
+end note
+browser->server: HTTP POST /new_note
+server-->browser: HTTP status code 302
+note over browser:
+Server requests browser to redirect to the address located in the header Location (/notes)
+end note 
+browser->server: HTTP GET /notes
+server-->browser: HTML code
+browser->server: HTTP GET main.css
+server-->browser: main.css
+browser->server: HTTP GET main.js
+server-->browser: main.js
+browser->server: HTTP GET data.json
+server-->browser: [{ content: "HTML is easy", date: "2019-05-23" }, ...]
