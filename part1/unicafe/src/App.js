@@ -1,19 +1,34 @@
 import { useState } from "react";
 
-const Statistics = (props) => {
-  console.log(props.value)
-  if (props.value === 0 || isNaN(props.value)) {
-    return (
-      <div>
-        <p>No feedback given</p>
-      </div>
-    )
-  }
-  return (
-    <p>{props.text} {props.value}{props.alt}</p>
-  )
+const Statistic = ({text, value}) =>
+  <tr>
+    <td>{text}</td>
+    <td>{value}</td>
+  </tr>
 
+const Statistics = ({good, bad, neutral, allClicks}) => {
+  console.log(allClicks.length);
+  if (allClicks.length === 0) {
+    return <p>No feedback given</p>
+  }
+  const all = allClicks.length
+  const average = ((good * 1) + (neutral * 0) + (bad * -1))/all
+  const positive = (good / (allClicks.length)*100) + "%"
+  return (
+    <table>
+      <tbody>
+        <Statistic text="good" value={good} />
+        <Statistic text="neutral" value={neutral} />
+        <Statistic text="bad" value={bad} />
+        <Statistic text="all" value={all} />
+        <Statistic text="average" value={average} />
+        <Statistic text="positive" value={positive} />
+      </tbody>
+    </table>
+  )
 }
+
+ const Button = ({onClick, text}) => <button onClick={onClick}>{text}</button>
 
 const App = () => {
   const [good, setGood] = useState(0)
@@ -39,16 +54,11 @@ const App = () => {
   return (
     <div>
       <h2>give feedback</h2>
-        <button onClick={handleGoodClicks}>good</button>
-        <button onClick={handleNeutralClicks}>neutral</button>
-        <button onClick={handleBadClicks}>bad</button>
+        <Button onClick={handleGoodClicks} text="good" />
+        <Button onClick={handleNeutralClicks} text="neutral" />
+        <Button onClick={handleBadClicks} text="bad" />
       <h2>statistics</h2>
-      <Statistics text="good" value={good} />
-      <Statistics text="neutral" value={neutral} />
-      <Statistics text="bad" value={bad} />
-      <Statistics text="all" value={allClicks.length} />
-      <Statistics text="average" value={((good * 1) + (neutral * 0) + (bad * -1)) /allClicks.length} />
-      <Statistics text="positive" value={good / (allClicks.length)*100} alt="%" />
+      <Statistics good={good} neutral={neutral} bad={bad} allClicks={allClicks} />
     </div>
   )
 }
