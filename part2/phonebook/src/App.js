@@ -15,16 +15,16 @@ const App = () => {
     const personObject = {
       name: newName
     }
-    persons.some(person => {
-      if (personObject.name === person.name) {
+    const allnames = persons.map(person => person.name)
+    if (allnames.includes(newName)) {
         alert(`${personObject.name} is already in the books`)
-      } else {
+        return
+    } else {
         setPersons(persons.concat(personObject))
         setNewName('')
       }
-    })
-
   }
+
 
   return (
     <div>
