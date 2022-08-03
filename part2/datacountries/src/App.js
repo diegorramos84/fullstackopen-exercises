@@ -14,24 +14,21 @@ function App() {
       .get('https://restcountries.com/v3.1/all')
       .then(response => {
         console.log('promise fulfilled')
-        const test = response
-        console.log(test)
         setCountries(response.data)
       })
   },[])
+
 
   const handleFilterChange = (event) => {
     setFilterCountry(event.target.value)
   }
 
-  const countriesNames = countries.map(countrie => countrie.name)
-
-
+  // const countriesNames = countries.map(countrie => countrie.name)
 
   return (
     <div>
       <Filter filterCountry={filterCountry} handleFilterChange={handleFilterChange} />
-      <CountriesList countries={countriesNames} filterCountry={filterCountry} />
+      <CountriesList countries={countries} filterCountry={filterCountry} />
     </div>
   );
 }
