@@ -28,6 +28,7 @@ const CountriesList = ({countries, filterCountry}) => {
 
           <p><strong>languages:</strong></p>
           <Languages country={filtered} />
+          <img src={country.flags.svg} />
         </div>
         )
       )

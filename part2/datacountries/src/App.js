@@ -18,12 +18,9 @@ function App() {
       })
   },[])
 
-
   const handleFilterChange = (event) => {
     setFilterCountry(event.target.value)
   }
-
-  // const countriesNames = countries.map(countrie => countrie.name)
 
   return (
     <div>
