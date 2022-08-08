@@ -22,10 +22,17 @@ function App() {
     setFilterCountry(event.target.value)
   }
 
+  const handleShowCountry = (countriesNames) => {
+    setFilterCountry(countriesNames.name.common)
+  }
+
   return (
     <div>
       <Filter filterCountry={filterCountry} handleFilterChange={handleFilterChange} />
-      <CountriesList countries={countries} filterCountry={filterCountry} />
+      <CountriesList
+      handleShowCountry = {handleShowCountry}
+      countries={countries}
+      filterCountry={filterCountry} />
     </div>
   );
 }
