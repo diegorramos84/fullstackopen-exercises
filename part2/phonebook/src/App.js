@@ -2,7 +2,7 @@ import React,{ useState, useEffect } from 'react'
 import Filter from './components/Filter'
 import PeopleForm from './components/PeopleForm'
 import NamesList from './components/NamesList'
-import axios from 'axios'
+import personsService from './services/persons'
 
 const App = () => {
   const [persons, setPersons] = useState([])
@@ -11,11 +11,11 @@ const App = () => {
   const [filterName, setFilterName] = useState('')
 
   useEffect(() => {
-    axios
-    .get('http://localhost:3001/persons')
-    .then(response => {
-      setPersons(response.data)
-    })
+    personsService
+      .getAll()
+      .then(allPersons=> {
+        setPersons(allPersons)
+      })
   }, [])
 
   const handleNameChange = (event) => {
@@ -30,6 +30,7 @@ const App = () => {
     setFilterName(event.target.value)
   }
 
+
   const allnames = persons.map(person => person.name)
 
 
@@ -38,16 +39,34 @@ const App = () => {
     const personObject = {
       name: newName,
       number: newNumber,
-      id: persons.length + 1
     }
     if (allnames.includes(newName)) {
         alert(`${personObject.name} is already in the books`)
         return
     } else {
-        setPersons(persons.concat(personObject))
-        setNewName('')
-        setNewNumber('')
+        personsService
+          .create(personObject)
+          .then(returnedPerson => {
+            setPersons(persons.concat(returnedPerson))
+            setNewName('')
+            setNewNumber('')
+        })
       }
+  }
+
+
+  const removePhone = (event) => {
+    const name = event.target.name
+    const id = event.target.value
+    if (window
+      .confirm(`Do you really want to delete ${name}'s contact?`)) {
+        personsService
+          .remove(id)
+          .then(allPersons => {
+            console.log(allPersons)
+            setPersons(persons.filter(person => person.name !== name ))
+        })
+    }
   }
 
   return (
@@ -62,7 +81,11 @@ const App = () => {
       />
       <h2>Numbers</h2>
       <div>New name: {newName}</div>
-      <NamesList persons={persons} filterName={filterName}/>
+      <NamesList
+      persons={persons}
+      filterName={filterName}
+      removePhone={removePhone}
+      />
     </div>
   )
 }
