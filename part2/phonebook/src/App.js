@@ -41,8 +41,20 @@ const App = () => {
       number: newNumber,
     }
     if (allnames.includes(newName)) {
-        alert(`${personObject.name} is already in the books`)
-        return
+      const findPerson = persons.find(person => person.name = newName)
+      const updateName = {...findPerson}
+      if (window.confirm(`${personObject.name} is already added to phonebook,
+          replace the old number with the new one?`)) {
+            console.log(updateName.id)
+              personsService
+                .update(updateName.id, personObject)
+                .then(returnedPerson => {
+                  setPersons(persons.map(person =>
+                    person.id !== updateName.id ? person : returnedPerson))
+                  setNewName('')
+                  setNewNumber('')
+                })
+      }
     } else {
         personsService
           .create(personObject)
@@ -53,7 +65,6 @@ const App = () => {
         })
       }
   }
-
 
   const removePhone = (event) => {
     const name = event.target.name
