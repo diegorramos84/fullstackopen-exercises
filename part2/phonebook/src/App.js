@@ -45,25 +45,25 @@ const App = () => {
       number: newNumber,
     }
 
-    if (persons.find(person => person.name === newName)) {
-      const updateName = persons.find(person => person.name === newName)
-      if (window.confirm(`${personObject.name} is already added to phonebook,
-          replace the old number with the new one?`)) {
-        personsService
-          .update(updateName.id, personObject)
-          .then(returnedPerson => {
-            setPersons(persons.map(person =>
-              person.id !== updateName.id ? person : returnedPerson))
-            setNewName('')
-            setNewNumber('')
-            setNotificationMessage(
-              `note: ${personObject.name} contact was updated`
-            )
-            setTimeout(() => {
-              setNotificationMessage(null)
-            }, 5000);
-          })
-      }
+    const updateName = persons.find(person => person.name === newName)
+      if (updateName) { // check if name already exists
+        if (window.confirm(`${personObject.name} is already in the phonebook,
+            replace the old number with the new one?`)) {
+          personsService
+            .update(updateName.id, personObject)
+            .then(returnedPerson => {
+              setPersons(persons.map(person =>
+                person.id !== updateName.id ? person : returnedPerson))
+              setNewName('')
+              setNewNumber('')
+              setNotificationMessage(
+                `note: ${personObject.name} contact was updated`
+              )
+              setTimeout(() => {
+                setNotificationMessage(null)
+              }, 5000);
+            })
+        }
     } else {
         personsService
           .create(personObject)
