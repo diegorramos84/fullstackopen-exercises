@@ -3,6 +3,7 @@ import Filter from './components/Filter'
 import PeopleForm from './components/PeopleForm'
 import NamesList from './components/NamesList'
 import Notifications from './components/Notification'
+import Error from './components/Error'
 
 import personsService from './services/persons'
 
@@ -13,6 +14,7 @@ const App = () => {
   const [newNumber, setNewNumber] = useState('')
   const [filterName, setFilterName] = useState('')
   const [notificationMessage, setNotificationMessage] = useState(null)
+  const [errorMessage, setErrorMessage] = useState(null)
 
 
   useEffect(() => {
@@ -35,9 +37,6 @@ const App = () => {
     setFilterName(event.target.value)
   }
 
-  // TODO: this should get the names from the server
-
-
   const addPerson = (event) => {
     event.preventDefault()
     const personObject = {
@@ -45,19 +44,30 @@ const App = () => {
       number: newNumber,
     }
 
-    const updateName = persons.find(person => person.name === newName)
-      if (updateName) { // check if name already exists
+    const NameInDB = persons.find(person => person.name === newName)
+      if (NameInDB) { // check if name already exists
         if (window.confirm(`${personObject.name} is already in the phonebook,
             replace the old number with the new one?`)) {
+          const updatePerson = { ...NameInDB }
           personsService
-            .update(updateName.id, personObject)
+            .update(updatePerson.id, personObject)
             .then(returnedPerson => {
               setPersons(persons.map(person =>
-                person.id !== updateName.id ? person : returnedPerson))
+                person.id !== updatePerson.id ? person : returnedPerson))
               setNewName('')
               setNewNumber('')
               setNotificationMessage(
-                `note: ${personObject.name} contact was updated`
+                `note: ${personObject.name}'s contact was updated`
+              )
+              setTimeout(() => {
+                setNotificationMessage(null)
+              }, 5000);
+            })
+            .catch(error => {
+              setErrorMessage(
+                `error: information from
+                ${personObject.name} has already been removed
+                from the server`
               )
               setTimeout(() => {
                 setNotificationMessage(null)
@@ -98,7 +108,8 @@ const App = () => {
   return (
     <div>
       <h1>Phonebook</h1>
-      <Notifications message={notificationMessage} />
+      <Notifications message={notificationMessage}/>
+      <Error error={errorMessage}/>
       <Filter filterName={filterName} handleFilterChange={handleFilterChange}/>
       <PeopleForm
       addPerson={addPerson}
