@@ -12,7 +12,7 @@ const App = () => {
   const [newName, setNewName] = useState('')
   const [newNumber, setNewNumber] = useState('')
   const [filterName, setFilterName] = useState('')
-  const [notificationMessage, setNotificationMessage] = useState('random message')
+  const [notificationMessage, setNotificationMessage] = useState(null)
 
 
   useEffect(() => {
@@ -35,8 +35,7 @@ const App = () => {
     setFilterName(event.target.value)
   }
 
-
-  const allnames = persons.map(person => person.name)
+  // TODO: this should get the names from the server
 
 
   const addPerson = (event) => {
@@ -45,26 +44,25 @@ const App = () => {
       name: newName,
       number: newNumber,
     }
-    if (allnames.includes(newName)) {
-      const findPerson = persons.find(person => person.name = newName)
-      const updateName = {...findPerson}
+
+    if (persons.find(person => person.name === newName)) {
+      const updateName = persons.find(person => person.name === newName)
       if (window.confirm(`${personObject.name} is already added to phonebook,
           replace the old number with the new one?`)) {
-            console.log(updateName.id)
-              personsService
-                .update(updateName.id, personObject)
-                .then(returnedPerson => {
-                  setPersons(persons.map(person =>
-                    person.id !== updateName.id ? person : returnedPerson))
-                  setNewName('')
-                  setNewNumber('')
-                  setNotificationMessage(
-                    `note: ${personObject.name} contact was updated`
-                  )
-                  setTimeout(() => {
-                    setNotificationMessage(null)
-                  }, 5000);
-                })
+        personsService
+          .update(updateName.id, personObject)
+          .then(returnedPerson => {
+            setPersons(persons.map(person =>
+              person.id !== updateName.id ? person : returnedPerson))
+            setNewName('')
+            setNewNumber('')
+            setNotificationMessage(
+              `note: ${personObject.name} contact was updated`
+            )
+            setTimeout(() => {
+              setNotificationMessage(null)
+            }, 5000);
+          })
       }
     } else {
         personsService
@@ -74,7 +72,7 @@ const App = () => {
             setNewName('')
             setNewNumber('')
             setNotificationMessage(
-              `${personObject.name} was added to the contact list`
+              `note: ${personObject.name} was added to the contact list`
             )
             setTimeout(() => {
               setNotificationMessage(null)
