@@ -1,14 +1,19 @@
-import React,{ useState, useEffect } from 'react'
+import React, { useState, useEffect } from 'react'
 import Filter from './components/Filter'
 import PeopleForm from './components/PeopleForm'
 import NamesList from './components/NamesList'
+import Notifications from './components/Notification'
+
 import personsService from './services/persons'
+
 
 const App = () => {
   const [persons, setPersons] = useState([])
   const [newName, setNewName] = useState('')
   const [newNumber, setNewNumber] = useState('')
   const [filterName, setFilterName] = useState('')
+  const [notificationMessage, setNotificationMessage] = useState('random message')
+
 
   useEffect(() => {
     personsService
@@ -53,6 +58,12 @@ const App = () => {
                     person.id !== updateName.id ? person : returnedPerson))
                   setNewName('')
                   setNewNumber('')
+                  setNotificationMessage(
+                    `note: ${personObject.name} contact was updated`
+                  )
+                  setTimeout(() => {
+                    setNotificationMessage(null)
+                  }, 5000);
                 })
       }
     } else {
@@ -62,6 +73,12 @@ const App = () => {
             setPersons(persons.concat(returnedPerson))
             setNewName('')
             setNewNumber('')
+            setNotificationMessage(
+              `${personObject.name} was added to the contact list`
+            )
+            setTimeout(() => {
+              setNotificationMessage(null)
+            }, 5000);
         })
       }
   }
@@ -82,6 +99,8 @@ const App = () => {
 
   return (
     <div>
+      <h1>Phonebook</h1>
+      <Notifications message={notificationMessage} />
       <Filter filterName={filterName} handleFilterChange={handleFilterChange}/>
       <PeopleForm
       addPerson={addPerson}
