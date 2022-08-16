@@ -101,8 +101,18 @@ const App = () => {
           .then(allPersons => {
             console.log(allPersons)
             setPersons(persons.filter(person => person.name !== name ))
-        })
-    }
+          })
+          .catch(error => {
+            setErrorMessage(
+              `error: information from
+              ${event.target.name} has already been removed
+              from the server`
+            )
+            setTimeout(() => {
+              setNotificationMessage(null)
+            }, 5000);
+          })
+      }
   }
 
   return (
