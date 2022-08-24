@@ -7,7 +7,7 @@ const NameList = ({persons, filterName, removePhone}) => {
   return (
     <div>
     {filtered.map(name =>
-    <p key={name.name}>{name.id} {name.name} {name.number}
+    <p key={name.name}>{name.name} {name.number}
     <button
     onClick={removePhone}
     value={name.id}
