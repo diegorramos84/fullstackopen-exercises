@@ -44,16 +44,19 @@ const App = () => {
       number: newNumber,
     }
 
-    const NameInDB = persons.find(person => person.name === newName)
-      if (NameInDB) { // check if name already exists
+    const nameInDB = persons.find(person => person.name === newName)
+    console.log(newName, "newname")
+      if (nameInDB) { // check if name already exists
+        console.log(nameInDB, "nameindb")
         if (window.confirm(`${personObject.name} is already in the phonebook,
             replace the old number with the new one?`)) {
-          const updatePerson = { ...NameInDB }
+
+          console.log(nameInDB.id, "id")
           personsService
-            .update(updatePerson.id, personObject)
+            .update(nameInDB.id, personObject)
             .then(returnedPerson => {
               setPersons(persons.map(person =>
-                person.id !== updatePerson.id ? person : returnedPerson))
+                person.id !== nameInDB.id ? person : returnedPerson))
               setNewName('')
               setNewNumber('')
               setNotificationMessage(
