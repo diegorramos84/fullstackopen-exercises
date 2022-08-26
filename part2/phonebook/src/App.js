@@ -104,6 +104,12 @@ const App = () => {
           .then(allPersons => {
             console.log(allPersons)
             setPersons(persons.filter(person => person.name !== name ))
+            setNotificationMessage(
+              `note: ${name} was removed`
+            )
+            setTimeout(() => {
+              setNotificationMessage(null)
+            }, 5000);
           })
           .catch(error => {
             setErrorMessage(
