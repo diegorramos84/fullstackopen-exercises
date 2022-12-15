@@ -78,35 +78,35 @@ const App = () => {
     const changedNote = { ...note, important: !note.important }
 
     noteService
-    .update(id, changedNote)
-    .then(returnedNote => {
-      setNotes(notes.map(note => note.id !== id ? note : returnedNote))
-    })
-    .catch(error => {
-      setErrorMessage(
-        `the note '${note.content}' was already deleted from server`
+      .update(id, changedNote)
+      .then(returnedNote => {
+        setNotes(notes.map(note => note.id !== id ? note : returnedNote))
+      })
+      .catch(error => {
+        setErrorMessage(
+          `the note '${error}-${note.content}' was already deleted from server `
         )
         setTimeout(() => {
           setErrorMessage(null)
-        }, 5000);
+        }, 5000)
         setNotes(notes.filter(n => n.id !== id))
       })
-    }
+  }
 
-    const addNote = (noteObject) => {
-      noteFormRef.current.toggleVisibility()
-      noteService
-        .create(noteObject)
-        .then(returnedNote => {
-          setNotes(notes.concat(returnedNote))
-        })
-    }
+  const addNote = (noteObject) => {
+    noteFormRef.current.toggleVisibility()
+    noteService
+      .create(noteObject)
+      .then(returnedNote => {
+        setNotes(notes.concat(returnedNote))
+      })
+  }
 
   const notesToShow = showAll
     ? notes
     : notes.filter(note => note.important)
 
-    const noteFormRef = useRef()
+  const noteFormRef = useRef()
 
   return (
     <div>
@@ -115,13 +115,13 @@ const App = () => {
 
       {user === null ?
         <Togglable buttonLabel='login'>
-        <LoginForm
-          username={username}
-          password={password}
-          handleUsernameChange={({ target }) => setUsername(target.value)}
-          handlePasswordChange={({ target }) => setPassword(target.value)}
-          handleSubmit={handleLogin}
-        />
+          <LoginForm
+            username={username}
+            password={password}
+            handleUsernameChange={({ target }) => setUsername(target.value)}
+            handlePasswordChange={({ target }) => setPassword(target.value)}
+            handleSubmit={handleLogin}
+          />
         </Togglable> :
         <div>
           <p>{user.name} logged in</p>
